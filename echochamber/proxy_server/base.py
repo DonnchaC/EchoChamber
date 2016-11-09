@@ -28,7 +28,8 @@ class BaseProxyServer(object):
         self.input_list = [self.server]
         self.channel = {}
         self.fhost = fhost
-        self.fport = fport 
+        self.fport = fport
+        self.modulo = None
 
     def communicate(self):
         inputready, outputready, exceptready = select.select(self.input_list, [], [], 0)

@@ -24,14 +24,16 @@ class ConnectionTest(BaseTest):
             account = client.attr["account"].split("@")[0]
             if not client.outbuf:
                 pass
-            if (client.outbuf and client.outbuf["request"] == "joined" and 
+            if (client.outbuf and client.outbuf["request"] == "joined" and
                     account in client.outbuf["participants"] and client not in self.connected):
                 self._results.append(True)
                 self.connected.append(client)
                 self.start_client += 1
                 print "%d clients  %.2fs" % (self.start_client, time.time() - self.start_time)
                 client.outbuf = None
-                client.inbuf = msg
+
+                # XXX: Remove use of msg when it is unassigned
+                # client.inbuf = msg
             client.communicate()
         if len(self._results) == len(self.clients):
             self._score()

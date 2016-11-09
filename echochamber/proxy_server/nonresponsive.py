@@ -13,5 +13,8 @@ class NonResponsiveProxyServer(BaseProxyServer):
         if self.s not in self.msg_count.keys():
             self.msg_count[self.s] = 0
         self.msg_count[self.s] += 1
-        if self.msg_count[self.s] % self.modulo and not self.joined:
+
+        # Accept packet if modulo (drop every N packet) is not set
+        # or if the packet number is not one of the packets to drop.
+        if (not self.modulo or self.msg_count[self.s] % self.modulo) and not self.joined:
             self.channel[self.s].send(self.data)
