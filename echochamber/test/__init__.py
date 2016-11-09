@@ -1,3 +1,4 @@
+# flake8: noqa
 from connection import ConnectionTest
 from latency import LatencyTest
 from messaging import MessagingTest

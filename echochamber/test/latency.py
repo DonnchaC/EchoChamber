@@ -3,6 +3,7 @@ from echochamber.client import Client
 from connection import ConnectionTest
 import os
 
+
 class LatencyTest(ConnectionTest):
     def _setup_clients(self):
         self.proxy_servers = []
@@ -10,7 +11,10 @@ class LatencyTest(ConnectionTest):
             client_data = self.test_data["clients"][n]
             sock_path = os.path.join(self.sock_path, client_data["account"])
             client_data["port"] = 5224 + n
-            self.proxy_servers.append(LatencyProxyServer("localhost", client_data["port"], self.server_host, 5222, int(client_data["latency"])))
+            self.proxy_servers.append(LatencyProxyServer(
+                    "localhost", client_data["port"], self.server_host, 5222,
+                    int(client_data["latency"])
+            ))
             self.clients.append(Client(client_data, self.config, sock_path, self.debug))
             self._adduser(client_data)
 

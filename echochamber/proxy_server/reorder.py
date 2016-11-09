@@ -2,6 +2,7 @@ from latency import LatencyProxyServer
 import time
 import random
 
+
 # we are using a latency proxy server, and reordering the queued messages
 # hardcoding latency with hopes that enough messages will be queued for
 # shuffling

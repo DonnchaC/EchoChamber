@@ -1,13 +1,14 @@
 import shutil
-import time
 import shlex
 import tempfile
 import os
 import subprocess
+import signal
+import psutil
 from jinja2 import Template
 
 from echochamber.client import Client
-import signal, psutil
+
 
 def kill_child_processes(parent_pid, sig=signal.SIGTERM):
     try:
@@ -18,6 +19,7 @@ def kill_child_processes(parent_pid, sig=signal.SIGTERM):
     for process in children:
         process.send_signal(sig)
 
+
 # Subclass and add run(), and _score() methods
 # to implement a new test class
 class BaseTest(object):
@@ -27,7 +29,7 @@ class BaseTest(object):
         self.debug = debug
         self.tempdir = tempfile.mkdtemp(prefix="echochamber_")
         self.clients = []
-        self.null = open(os.devnull,"w")
+        self.null = open(os.devnull, "w")
         self.server_host = "localhost"
         if "server" in self.test_data and "host" in self.test_data["server"]:
             self.server_host = self.test_data["server"]["host"]
@@ -43,10 +45,10 @@ class BaseTest(object):
         for n in range(int(self.test_data["clients"]["count"])):
             account = "client%03d@localhost" % n
             client_data = {
-                "account" : account,
-                "password" : "password",
-                "room" : self.test_data["clients"]["room"],
-                "server" : self.test_data["clients"]["server"]}
+                "account": account,
+                "password": "password",
+                "room": self.test_data["clients"]["room"],
+                "server": self.test_data["clients"]["server"]}
             sock_path = os.path.join(self.sock_path, client_data["account"])
             self.clients.append(Client(client_data, self.config, sock_path, self.debug))
             self._adduser(client_data)
@@ -59,13 +61,15 @@ class BaseTest(object):
         kill_child_processes(self.pid)
 
     def _deluser(self, client_data):
-        cmd = shlex.split("prosodyctl --config %s deluser %s" % (self.prosody_config, client_data["account"]))
+        cmd = shlex.split("prosodyctl --config %s deluser %s" % (self.prosody_config,
+                          client_data["account"]))
         subprocess.call(cmd, stdout=self.null, stderr=self.null)
 
     def _adduser(self, client_data):
         addcmd = "prosodyctl --config %s adduser %s" % (self.prosody_config, client_data["account"])
         self._deluser(client_data)
-        process = subprocess.Popen(shlex.split(addcmd), stdin=subprocess.PIPE, stderr=self.null, stdout=self.null)
+        process = subprocess.Popen(shlex.split(addcmd), stdin=subprocess.PIPE, stderr=self.null,
+                                   stdout=self.null)
         process.communicate(os.linesep.join([client_data["password"], client_data["password"]]))
 
     def _setup_server(self):
@@ -79,12 +83,13 @@ class BaseTest(object):
             os.makedirs(dir_)
         t = Template(open("templates/prosody.cfg.lua").read())
         t_data = {
-            "data_path" : data_path,
-            "run_path" : run_path,
-            "config_path" : config_path,
-            "certs_path" : certs_path,
-            "log_path" : log_path,
-            "host" : self.server_host}
+            "data_path": data_path,
+            "run_path": run_path,
+            "config_path": config_path,
+            "certs_path": certs_path,
+            "log_path": log_path,
+            "host": self.server_host
+        }
         self.prosody_config = os.path.join(config_path, "prosody.cfg.lua")
         with open(os.path.join(self.prosody_config), "w") as fh:
             fh.write(t.render(t_data))

@@ -5,6 +5,7 @@ import string
 import os
 from echochamber.client import Client
 
+
 class MessagingTest(LoadTest):
     def __init__(self, test_data, config, debug):
         super(MessagingTest, self).__init__(test_data, config, debug)
@@ -16,10 +17,10 @@ class MessagingTest(LoadTest):
         for n in range(int(self.test_data["clients"]["count"])):
             account = "client%03d@localhost" % n
             client_data = {
-                "account" : account,
-                "password" : "password",
-                "room" : self.test_data["clients"]["room"],
-                "server" : self.test_data["clients"]["server"]}
+                "account": account,
+                "password": "password",
+                "room": self.test_data["clients"]["room"],
+                "server": self.test_data["clients"]["server"]}
             sock_path = os.path.join(self.sock_path, client_data["account"])
             self.clients.append(Client(client_data, self.config, sock_path, self.debug))
             self._adduser(client_data)
@@ -51,9 +52,12 @@ class MessagingTest(LoadTest):
                 freq = freq_h
             for n in range(freq):
                 msg = {
-                    "request":"prompt",
-                    "to": "%s@%s" % (client.attr["room"],client.attr["server"]),
-                    "message": "%03d: %s" % (n, ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(random.randrange(14,200)))) # prepending serial number for the message to track message sequence
+                    "request": "prompt",
+                    "to": "%s@%s" % (client.attr["room"], client.attr["server"]),
+                    "message": "%03d: %s" % (n, ''.join(
+                        random.choice(string.ascii_uppercase + string.digits)
+                        for _ in range(random.randrange(14, 200))))
+                    # prepending serial number for the message to track message sequence
                 }
                 # [XXX] start messaging 2 seconds after global start time - might
                 # need tweaking for slow joins with large numbers of clients
@@ -75,9 +79,12 @@ class MessagingTest(LoadTest):
                             max_t = t
         threshhold = float(self.test_data["threshhold"])
         if max_t > threshhold:
-            self.result = [False, "%02.3f maximum message time exceeds threshhold of %02.3f seconds with %d clients" % (max_t, threshhold, len(self.clients))]
+            self.result = [False, "%02.3f maximum message time exceeds threshhold of %02.3f "
+                           "seconds with %d clients" % (max_t, threshhold, len(self.clients))]
         else:
-            self.result = [True, "%d clients sent messages with a %02.3f seconds maximum message time, below %02.3f seconds threshhold time" % (len(self.clients), max_t, threshhold)]
+            self.result = [True, "%d clients sent messages with a %02.3f seconds maximum "
+                           "message time, below %02.3f seconds threshhold time" %
+                           (len(self.clients), max_t, threshhold)]
 
     def run(self):
         if not self.start_time:
@@ -102,11 +109,11 @@ class MessagingTest(LoadTest):
                     self.msg_in_done[client] = {}
                     self.msg_out[client] = {}
                     client.joined = True
-            else: # this client is already connected so check if there are messages
+            else:  # this client is already connected so check if there are messages
                 if "request" in client.outbuf.keys():
                     if client.outbuf["request"] == "received":
                         from_ = client.outbuf["from"]
-                        if not from_ in self.msg_out[client].keys():
+                        if from_ not in self.msg_out[client].keys():
                             self.msg_out[client][from_] = {}
                         self.msg_out[client][from_][time.time()] = client.outbuf
                         client.outbuf = {}

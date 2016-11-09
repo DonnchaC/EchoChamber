@@ -1,11 +1,10 @@
 from base import BaseProxyServer
-import time
-import random
+
 
 class NonResponsiveProxyServer(BaseProxyServer):
     def __init__(self, host, port, fhost, fport):
         super(NonResponsiveProxyServer, self).__init__(host, port, fhost, fport)
-        self.msg_count = {} # dictionary to hold message counts
+        self.msg_count = {}  # dictionary to hold message counts
         # once joined, the proxy server stops responding
         self.joined = False
 

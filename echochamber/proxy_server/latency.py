@@ -1,6 +1,7 @@
 from base import BaseProxyServer
 import time
 
+
 class LatencyProxyServer(BaseProxyServer):
     def __init__(self, host, port, fhost, fport, latency=0):
         super(LatencyProxyServer, self).__init__(host, port, fhost, fport)
@@ -11,7 +12,7 @@ class LatencyProxyServer(BaseProxyServer):
         super(LatencyProxyServer, self).communicate()
         now = time.time()
         pop = {}
-        for s,q in self.queue.items(): # a distinct queue for each channel
+        for s, q in self.queue.items():  # a distinct queue for each channel
             pop[s] = []
             for t in q.keys():
                 if t <= now:
@@ -23,5 +24,5 @@ class LatencyProxyServer(BaseProxyServer):
             self.queue[self.s] = {}
         future = time.time() + self.latency
         # uncomment to debug
-        #print future, self.data
+        # print future, self.data
         self.queue[self.s][future] = self.data

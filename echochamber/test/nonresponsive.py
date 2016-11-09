@@ -1,8 +1,8 @@
-from base import BaseTest
 from echochamber.proxy_server import NonResponsiveProxyServer
 from echochamber.client import Client
 from messaging import MessagingTest
 import os
+
 
 class NonResponsiveTest(MessagingTest):
     def __init__(self, test_data, config, debug):
@@ -16,24 +16,24 @@ class NonResponsiveTest(MessagingTest):
             account = "client%03d@localhost" % n
             client_data = {
                 "account": account,
-                "password" : "password",
-                "room" : self.test_data["clients"]["room"],
-                "server" : self.test_data["clients"]["server"],
-                "port" : 15224 + n }
-            if n  == (num_clients - 2): # second to last client
+                "password": "password",
+                "room": self.test_data["clients"]["room"],
+                "server": self.test_data["clients"]["server"],
+                "port": 15224 + n
+            }
+            if n == (num_clients - 2):  # second to last client
                 client_data["port"] = 15524 + n
-                self.proxy_servers.append(NonResponsiveProxyServer("localhost",
-                    client_data["port"], self.server_host, 5222))
+                self.proxy_servers.append(NonResponsiveProxyServer(
+                    "localhost", client_data["port"], self.server_host, 5222))
             sock_path = os.path.join(self.sock_path, client_data["account"])
-            self.clients.append(Client(client_data, self.config, sock_path,
-                self.debug))
+            self.clients.append(Client(client_data, self.config, sock_path, self.debug))
             self._adduser(client_data)
 
     def run(self):
         # only trigger the non-responsive proxy once the client joins
         if not self.joined:
             for client in self.clients:
-                if client.joined == True:
+                if client.joined:
                     client.proxy_server.joined = True
                     self.client_joined = True
         for proxy_server in self.proxy_servers:
@@ -41,4 +41,4 @@ class NonResponsiveTest(MessagingTest):
         super(NonResponsiveTest, self).run()
 
     def _score(self):
-        pass # still stubbed
+        pass  # still stubbed

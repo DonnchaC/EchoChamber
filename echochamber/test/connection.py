@@ -1,12 +1,14 @@
 from base import BaseTest
 import time
 
+
 class ConnectionTest(BaseTest):
     def _score(self):
-        if not False in self._results:
+        if False not in self._results:
             self.result = [True, "%d clients connected to room" % len(self._results)]
         else:
-            self.result = [False, "%d clients of %d failed to connect to room" % self._results.count(False)]
+            self.result = [False, "%d clients of %d failed to connect to room" %
+                           self._results.count(False)]
 
     def run(self):
         if not self.start_time:

@@ -7,6 +7,7 @@ import socket
 import struct
 import json
 
+
 def read(output):
     fd = output.fileno()
     fl = fcntl.fcntl(fd, fcntl.F_GETFL)
@@ -16,6 +17,7 @@ def read(output):
     except:
         return ""
 
+
 class Client(object):
     def __init__(self, client, config, sock_path, debug=False):
         self.debug = debug
@@ -23,8 +25,11 @@ class Client(object):
         port = ""
         if "port" in client.keys():
             port = " --port=%s " % str(client["port"])
-        self.command = jabberite +" --account=" + client["account"]+ " --password=\""+ client["password"] + "\" --server=" +  client["server"] + " --room=" + client["room"] + port + " -e " + sock_path
-        self.env={"LD_LIBRARY_PATH": os.path.join(config["np1sec_path"], ".libs") + ":" + config["ld_library_path"]}
+        self.command = (jabberite + " --account=" + client["account"] + " --password=\"" +
+                        client["password"] + "\" --server=" + client["server"] + " --room=" +
+                        client["room"] + port + " -e " + sock_path)
+        self.env = {"LD_LIBRARY_PATH": os.path.join(config["np1sec_path"], ".libs") + ":" +
+                    config["ld_library_path"]}
         if debug:
             print self.command
         self.attr = client
@@ -52,7 +57,9 @@ class Client(object):
             self.s.listen(1)
             self.outputs.append(self.s)
         if not self.p:
-            self.p = subprocess.Popen(shlex.split(self.command), shell=False, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr = subprocess.PIPE, env=self.env)
+            self.p = subprocess.Popen(shlex.split(self.command), shell=False,
+                                      stdout=subprocess.PIPE, stdin=subprocess.PIPE,
+                                      stderr=subprocess.PIPE, env=self.env)
             self.outputs.extend([self.p.stdout, self.p.stderr])
 
     def cleanup(self):
@@ -62,7 +69,7 @@ class Client(object):
                 print "starting %s" % self.command
 
     def communicate(self):
-        r,w,e = select.select(self.outputs, self.inputs, [],0)
+        r, w, e = select.select(self.outputs, self.inputs, [], 0)
         for fd in r:
             if fd == self.p.stdout:
                 out = read(self.p.stdout)

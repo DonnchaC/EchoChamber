@@ -1,14 +1,12 @@
 #!/usr/bin/env python
-import subprocess
 import yaml
-import os
-import select
 import time
 from getopt import getopt, GetoptError
 from sys import argv
-import shlex
 
-from echochamber.test import *
+from echochamber.test import (ConnectionTest, LatencyTest, MessagingTest, ReorderTest,
+                              DropTest, DisconnectTest, NonResponsiveTest)
+
 
 def run_test(test_data, config, debug, timeout=0):
     if test_data["test"] == "connection":
@@ -43,12 +41,13 @@ def run_test(test_data, config, debug, timeout=0):
         test.cleanup()
         return [False, "Test interrupted by user", elapsed]
 
+
 if __name__ == "__main__":
     try:
         optlist, args = getopt(argv[1:], "c:d:t:", ["config", "data", "debug", "timeout"])
     except GetoptError as e:
         print str(e)
-	raise
+        raise
     config_file = "config.yml"
     test_file = "data.yml"
     debug = False
@@ -66,9 +65,11 @@ if __name__ == "__main__":
     data = yaml.load(file(test_file, "r"))
     for test_data in data:
         result = run_test(test_data, config, debug, timeout)
-        if result == None:
+        if result is None:
             print "FAIL for [%s]: test uncompleted" % test_data["name"]
         if result[0]:
-            print "PASS for [%s]: %s\n\tTime Elapsed: %f" % (test_data["name"], result[1], result[2])
+            print("PASS for [%s]: %s\n\tTime Elapsed: %f" % (test_data["name"], result[1],
+                  result[2]))
         else:
-            print "FAIL for [%s]: %s\n\tTime Elapsed: %f" % (test_data["name"], result[1], result[2])
+            print("FAIL for [%s]: %s\n\tTime Elapsed: %f" % (test_data["name"], result[1],
+                  result[2]))

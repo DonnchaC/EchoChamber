@@ -2,10 +2,9 @@
 # http://voorloopnul.com/blog/a-python-proxy-in-less-than-100-lines-of-code/
 import socket
 import select
-import time
-import sys
 
 buffer_size = 4096
+
 
 class Forward:
     def __init__(self):
@@ -18,6 +17,7 @@ class Forward:
         except Exception, e:
             print e
             return False
+
 
 class BaseProxyServer(object):
     def __init__(self, lhost, lport, fhost, fport):

@@ -1,11 +1,10 @@
 from base import BaseProxyServer
-import time
-import random
+
 
 class DropProxyServer(BaseProxyServer):
     def __init__(self, host, port, fhost, fport, modulo):
         super(DropProxyServer, self).__init__(host, port, fhost, fport)
-        self.msg_count = {} # dictionary to hold message counts
+        self.msg_count = {}  # dictionary to hold message counts
         # drop every modulo packet
         self.modulo = modulo
 
