@@ -2,4 +2,7 @@
 *.pyc
 config.yml
 data.yml
-
+.tox
+build
+dist
+*.egg-info

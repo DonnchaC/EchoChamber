@@ -51,5 +51,5 @@ EchoChamber has several command line options, but all are optional:
 - `--debug` will print debugging information from np1sec (default is no debugging).
 
 ```
-$ python echo_chamber -d customtest.yml -t 50 --debug
+$ python echo_chamber.py -d customtest.yml -t 50 --debug
 ```
