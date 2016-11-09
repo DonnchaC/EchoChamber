@@ -33,7 +33,7 @@ def run_test(test_data, config, debug, timeout=0):
             test.run()
             elapsed = time.time() - start
             if test.result is not None:
-                return test.result + [elapsed] 
+                return test.result + [elapsed]
             if timeout:
                 if elapsed > timeout:
                     test.cleanup()
@@ -65,7 +65,7 @@ if __name__ == "__main__":
     config = yaml.load(file(config_file, "r"))
     data = yaml.load(file(test_file, "r"))
     for test_data in data:
-        result = run_test(test_data, config, debug, timeout)    
+        result = run_test(test_data, config, debug, timeout)
         if result == None:
             print "FAIL for [%s]: test uncompleted" % test_data["name"]
         if result[0]:

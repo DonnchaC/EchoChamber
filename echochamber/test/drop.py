@@ -18,7 +18,7 @@ class DropTest(MessagingTest):
             sock_path = os.path.join(self.sock_path, client_data["account"])
             self.clients.append(Client(client_data, self.config, sock_path, self.debug))
             self._adduser(client_data)
-    
+
     def run(self):
         for proxy_server in self.proxy_servers:
             proxy_server.communicate()

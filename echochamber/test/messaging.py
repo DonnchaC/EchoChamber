@@ -31,7 +31,7 @@ class MessagingTest(LoadTest):
         # num of messages for frequent messengers
         try:
             freq_h = int(self.test_data["frequency_high"])
-        except KeyError: 
+        except KeyError:
             freq_h = int(total_time * .8)
         # num of messages for less frequent messengers
         try:
@@ -55,7 +55,7 @@ class MessagingTest(LoadTest):
                     "to": "%s@%s" % (client.attr["room"],client.attr["server"]),
                     "message": "%03d: %s" % (n, ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(random.randrange(14,200)))) # prepending serial number for the message to track message sequence
                 }
-                # [XXX] start messaging 2 seconds after global start time - might 
+                # [XXX] start messaging 2 seconds after global start time - might
                 # need tweaking for slow joins with large numbers of clients
                 msg_in[client][random.uniform(2, total_time)] = msg
         return msg_in

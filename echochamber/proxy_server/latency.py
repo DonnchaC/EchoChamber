@@ -9,7 +9,7 @@ class LatencyProxyServer(BaseProxyServer):
 
     def communicate(self):
         super(LatencyProxyServer, self).communicate()
-        now = time.time() 
+        now = time.time()
         pop = {}
         for s,q in self.queue.items(): # a distinct queue for each channel
             pop[s] = []

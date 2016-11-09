@@ -23,14 +23,14 @@ class NonResponsiveTest(MessagingTest):
             if n  == (num_clients - 2): # second to last client
                 client_data["port"] = 15524 + n
                 self.proxy_servers.append(NonResponsiveProxyServer("localhost",
-                    client_data["port"], self.server_host, 5222)) 
+                    client_data["port"], self.server_host, 5222))
             sock_path = os.path.join(self.sock_path, client_data["account"])
             self.clients.append(Client(client_data, self.config, sock_path,
                 self.debug))
             self._adduser(client_data)
 
     def run(self):
-        # only trigger the non-responsive proxy once the client joins 
+        # only trigger the non-responsive proxy once the client joins
         if not self.joined:
             for client in self.clients:
                 if client.joined == True:
