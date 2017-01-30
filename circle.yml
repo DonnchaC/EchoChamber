@@ -12,5 +12,5 @@ dependencies:
 
 test:
   override:
-    - pytest -s -v
+    - pytest -s -v --junit-xml=$CIRCLE_TEST_REPORTS/test_result.xml
     - tox
